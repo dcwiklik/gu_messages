@@ -1,0 +1,14 @@
+{
+    "name": "dcwiklik/gu_messages",
+    "description": "GU Recruitment Exercise",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dominik C",
+            "email": "dcwiklik@gmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^1.22"
+    }
+}
