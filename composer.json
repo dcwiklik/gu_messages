@@ -9,6 +9,7 @@
         }
     ],
     "require": {
-        "monolog/monolog": "^1.22"
+        "monolog/monolog": "^1.22",
+	"php-amqplib/php-amqplib": "2.5.*"
     }
 }
