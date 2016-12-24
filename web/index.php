@@ -2,18 +2,15 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 
-$route = new Route('/foo', array('controller' => 'MyController'));
-$routes = new RouteCollection();
-$routes->add('route_name', $route);
+define('DIR_CONFIG', __DIR__ . '/../config/');
 
-$context = new RequestContext('/');
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
 
-$matcher = new UrlMatcher($routes, $context);
-
-$parameters = $matcher->match('/foo');
-// array('controller' => 'MyController', '_route' => 'route_name')
+// look inside *this* directory
+$locator = new FileLocator(array(__DIR__));
+$loader = new YamlFileLoader($locator);
+$collection = $loader->load(DIR_CONFIG . 'routes.yml');
