@@ -1,16 +1,17 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+/**
+ * Set app main dir
+ */
+$appDirectory = __DIR__ . '/..';
 
-ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
+/**
+ * Require composer autoload file
+ */
+require $appDirectory . '/vendor/autoload.php';
 
-define('DIR_CONFIG', __DIR__ . '/../config/');
-
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-
-// look inside *this* directory
-$locator = new FileLocator(array(__DIR__));
-$loader = new YamlFileLoader($locator);
-$collection = $loader->load(DIR_CONFIG . 'routes.yml');
+/**
+ * Start app
+ */
+$Starter = new \App\Starter($appDirectory, 'DEV');
+$Starter->init();
