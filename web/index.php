@@ -11,7 +11,11 @@ $appDirectory = __DIR__ . '/..';
 require $appDirectory . '/vendor/autoload.php';
 
 /**
- * Start app
+ * Create app object
  */
-$Starter = new \App\Starter($appDirectory, 'DEV');
+$Starter = new \App\Starter($appDirectory, \App\Starter::APP_MODE_DEV);
+
+/**
+ * Init app
+ */
 $Starter->init();

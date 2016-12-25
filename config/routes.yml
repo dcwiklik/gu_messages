@@ -1,8 +1,8 @@
 # routes.yml
 route1:
     path:     /
-    defaults: { _controller: 'App\Controllers\DefaultController::indexAction' }
+    defaults: { _controller: 'App\GatewayModule\Controllers\DefaultController::indexAction' }
 
 route2:
     path:     /test
-    defaults: { _controller: 'App\Controllers\DefaultController::testAction' }
+    defaults: { _controller: 'App\GatewayModule\Controllers\DefaultController::testAction' }

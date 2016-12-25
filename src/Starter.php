@@ -16,9 +16,15 @@ use Symfony\Component\Routing\RequestContext;
 class Starter
 {
     /**
+     * App modes
+     */
+    CONST APP_MODE_DEV = 'DEV';
+    CONST APP_MODE_PROD = 'PROD';
+
+    /**
      * App mode
      */
-    private $applicationMode = 'DEV';
+    private $applicationMode;
 
     /**
      * @var
@@ -33,16 +39,26 @@ class Starter
     /**
      * Starter constructor.
      * @param $applicationMainDirectory
-     * @param string $applicationMode (PROD | DEV)
+     * @param string $applicationMode (APP_MODE_PROD | APP_MODE_DEV)
      */
-    public function __construct($applicationMainDirectory, $applicationMode = 'PROD')
+    public function __construct($applicationMainDirectory, $applicationMode)
     {
-        if ('DEV' == $applicationMode) {
+        if (self::APP_MODE_DEV == $applicationMode) {
             ini_set('display_errors', 1);
             ini_set('error_reporting', E_ALL);
         }
 
         $this->applicationMainDir = $applicationMainDirectory;
+    }
+
+    /**
+     * Get currenty application main dir
+     *
+     * @return mixed
+     */
+    public function getApplicationMainDir()
+    {
+        return $this->applicationMainDir;
     }
 
     /**
@@ -59,6 +75,8 @@ class Starter
 
     /**
      * Check route
+     *
+     * @return bool
      */
     private function checkRoute()
     {
@@ -67,7 +85,7 @@ class Starter
 
         $routerOptions = [];
 
-        if ('DEV' != $this->applicationMode) {
+        if (self::APP_MODE_DEV != $this->applicationMode) {
             $applicationMode['cache_dir'] = $this->applicationMainDir . '/cache';
         }
 
@@ -93,6 +111,8 @@ class Starter
         } catch (Exception $e) {
             die('Router error: Unknown');
         }
+
+        return true;
     }
 
     /**
@@ -103,8 +123,14 @@ class Starter
      */
     private function runAction($controller, $action)
     {
-        $c = new $controller();
-        $c->$action();
+        $currentController = new $controller($this);
+
+        if ($currentController->$action()) {
+            //ok
+        } else {
+            //controller error
+
+        }
     }
 
 }
