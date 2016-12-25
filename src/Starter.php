@@ -125,7 +125,7 @@ class Starter
     {
         $currentController = new $controller($this);
 
-        if ($currentController->$action()) {
+        if (TRUE === $currentController->$action()) {
             //ok
         } else {
             //controller error
