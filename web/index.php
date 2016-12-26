@@ -13,7 +13,7 @@ require $appDirectory . '/vendor/autoload.php';
 /**
  * Create app object
  */
-$Starter = new \App\Starter($appDirectory, \App\Starter::APP_MODE_DEV);
+$Starter = new \App\App($appDirectory, \App\App::APP_MODE_DEV);
 
 /**
  * Init app

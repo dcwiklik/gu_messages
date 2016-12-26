@@ -10,10 +10,10 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * Class Starter
+ * Class App
  * @package App
  */
-class Starter
+class App
 {
     /**
      * App modes

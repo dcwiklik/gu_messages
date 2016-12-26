@@ -1,6 +1,7 @@
 <?php
 
 namespace App\GatewayModule\Gateway;
+use App\GatewayModule\ApiAdapter\ApiAdapter;
 
 /**
  * Class GatewayAbstract
@@ -9,10 +10,10 @@ namespace App\GatewayModule\Gateway;
 abstract class GatewayAbstract
 {
     /**
-     * Api Types
+     * Gateway type
      */
-    CONST API_TYPE_SMS = 'SMS';
-    CONST API_TYPE_EMAIL = 'EMAIL';
+    CONST TYPE_SMS = 'SMS';
+    CONST TYPE_EMAIL = 'EMAIL';
 
     /**
      * @var
@@ -25,18 +26,28 @@ abstract class GatewayAbstract
     protected $adapter;
 
     /**
-     * Gateway constructor.
+     * GatewayAbstract constructor.
      * @param $type
+     * @param ApiAdapter $adapter
      */
-    public function __construct($type, ApiAdapter$adapter)
+    public function __construct($type, ApiAdapter $adapter)
     {
         $this->type = $type;
         $this->adapter = $adapter;
     }
 
     /**
+     * @param $receiver
+     * @param $message
      * @return mixed
      */
     abstract public function push($receiver, $message);
 
+    /**
+     * @return string
+     */
+    public function getIdent()
+    {
+        return $this->type . '_GATEWAY_' . get_class($this->adapter->getProvider()) . '_PROVIDER';
+    }
 }

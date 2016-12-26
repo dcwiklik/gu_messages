@@ -2,10 +2,13 @@
 
 namespace App\GatewayModule\Controllers;
 
-use App\GatewayModule\Gateway\EmailGateway;
+use App\GatewayModule\ApiAdapter\ApiAdapter;
+use App\GatewayModule\Exceptions\GatewayException;
+use App\GatewayModule\Exceptions\ProviderException;
 use App\GatewayModule\Gateway\GatewayAbstract;
 use App\GatewayModule\Gateway\SMSGateway;
-use App\GatewayModule\Gateway\ApiAdapter;
+use App\GatewayModule\MessageProvider\SMS1;
+use App\GatewayModule\MessageProvider\SMS2;
 use App\SomeFramework\ControllerAbstract;
 
 /**
@@ -20,24 +23,25 @@ class DefaultController extends ControllerAbstract
     public function indexAction()
     {
         /**
-         * Create adapter
+         * TODO
+         *
+         * - add message to queue
+         * - consume queue items
+         * - send message through provider
+         * - check status
          */
-        $adapter = new ApiAdapter();
-        $adapter->setProvider('smsProvider1');
+
+        $messagesStatuses = array();
 
         /**
-         * Send SMS
+         * Send test messages
          */
-        $smsGateway = new SMSGateway(GatewayAbstract::API_TYPE_SMS, $adapter);
-        $smsGateway->push('555555555', 'Wiadomość 1');
+        $messagesStatuses[] = $this->sendMessage1();
+        $messagesStatuses[] = $this->sendMessage2();
 
-        //$emailGateway = new EmailGateway(GatewayAbstract::API_TYPE_EMAIL);
-        //$emailGateway->push('Wiadomość 1');
-
-
-        //var_dump($emailGateway);
-
-        return $this->render('GatewayModule/Views/default/index');
+        return $this->render('GatewayModule/Views/default/index', array(
+            'messagesStatuses' => $messagesStatuses
+        ));
     }
 
     /**
@@ -46,5 +50,63 @@ class DefaultController extends ControllerAbstract
     public function testAction()
     {
         echo 'test action';
+    }
+
+    /**********************************************************************************************
+     **************************************   PRIVATE    ******************************************
+     *********************************************************************************************/
+
+    /**
+     * @return ProviderException|bool|\Exception
+     */
+    private function sendMessage1()
+    {
+        /**
+         * Create adapter
+         */
+        $adapter = new ApiAdapter();
+
+        $provider = new SMS1();
+        $adapter->setProvider($provider);
+
+        /**
+         * Send SMS through SMS2 Provider
+         */
+        $smsGateway = new SMSGateway(GatewayAbstract::TYPE_SMS, $adapter);
+
+        try {
+            $smsGateway->push('555555555', 'Wiadomość 1');
+        } catch (ProviderException $exception) {
+            return $exception;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return GatewayException|bool|\Exception
+     */
+    private function sendMessage2()
+    {
+        /**
+         * Create adapter
+         */
+        $adapter = new ApiAdapter();
+
+        $provider = new SMS2();
+        $adapter->setProvider($provider);
+
+        /**
+         * Send SMS through SMS2 Provider
+         */
+        $smsGateway = new SMSGateway(GatewayAbstract::TYPE_SMS, $adapter);
+
+        try {
+            $smsGateway->push('555555555', 'Wiadomość 1');
+        } catch (GatewayException $exception) {
+            return $exception;
+        }
+
+        return true;
     }
 }

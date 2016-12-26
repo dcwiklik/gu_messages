@@ -2,8 +2,9 @@
 
 namespace App\SomeFramework;
 
+use App\App;
+use App\GatewayModule\Exceptions\ControllerException;
 use App\Starter;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Class ControllerAbstract
@@ -14,15 +15,15 @@ abstract class ControllerAbstract
     /**
      * @var Starter
      */
-    private $starter;
+    private $app;
 
     /**
      * ControllerAbstract constructor.
-     * @param Starter $starter
+     * @param App $app
      */
-    public function __construct(Starter $starter)
+    public function __construct(App $app)
     {
-        $this->starter = $starter;
+        $this->app = $app;
     }
 
     /**
@@ -31,17 +32,17 @@ abstract class ControllerAbstract
      * @param $viewFilename
      * @param array $params
      * @return bool
-     * @throws \Exception
+     * @throws ControllerException
      */
     public function render($viewFilename, $params = array())
     {
         $viewFullPath = sprintf('%s/src/%s.%s',
-            $this->starter->getApplicationMainDir(),
+            $this->app->getApplicationMainDir(),
             $viewFilename,
             'php');
 
         if (!file_exists($viewFullPath)) {
-            throw new \Exception('View file not found ('.$viewFilename.')');
+            throw new ControllerException('View file not found ('.$viewFilename.')');
         }
 
         ob_start();
